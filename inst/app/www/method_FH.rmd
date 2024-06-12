@@ -1,0 +1,23 @@
+---
+title: "Methods for Survey Prev"
+output:
+  bookdown::html_book:
+    number_sections: false
+---
+ 
+
+### <span style="color:royalblue">Area-level (Fay-Herriot) Model</span>
+
+Fay-Herriot models provides smoothed estimates at the areal level using direct estimate $\hat p^{W}_{i}$ as input. The direct estimates are modeled as a noisy observation of the true prevalence, with the variance of noise determined by the design-based variance. We consider the spatial Fay-Herriot model for the logit transformed direct estimates, which is defined as follows:
+
+$$\text{logit}(\hat p^{W}_{i})|\lambda_{i} \sim\textrm{Normal}(\lambda_{i}, V_{i}^{HT}),$$
+$$\lambda_{i}= \alpha + e_i+S_i.$$
+Here $\text{expit}(\lambda_{i})$ is the latent true prevalence, and $e_i$ and $S_i$ are unstructured and structured spatial random effects. Inference is carried out using Bayesian methods and so the model specific is completed by priors on $\alpha$, $e$ and $S$, and their hyperpriors. More details of the Bayesian model setup can be found in Wakefield,
+Okonek, and Pedersen (2020). Area level Fay-Herriot model are viewed as the most reliable model choice, since they acknowledge the design through the sue of a weighted estimate and its associated variance. See chapters 4 to 6 of Rao and Molina (2015).
+
+
+As of now the package allows only an overall intercept $\alpha$, but future versions of the package will allow area level covariates to be included. The default prior for the intercept is $N(0, 1000)$. The structured and non-structured random effects are implemented used Besag-York-Mollié (BYM) via BYM2 parameterization, with default PC priors such that the marginal standard deviation has a prior such that $Prob(\sigma > 1) = 0.01$ and the proportion of variation explained by the spatial effect, $\phi$ has a prior such that $Prob(\phi \gt 0.5) = \frac{2}{3}$ (Riebler et al. 2016; Simpson et al. 2017).
+
+The app implements spatial Fay-Herriot models at different administrative levels using `surveyPrev::fhModel()` and internally `SUMMER::smoothSurvey()`.
+
+A Fay-Herriot model at fine spatial level (over Admin-2) can be fitted by treating areas without direct estimates as missing data, though <span style="color:orange">it is usually not recommended due to data sparsity</span>. In addition, numerical issue arise when design-based variance of direct estimate is close to zero and logit precision become too large. Our implementation fixes this issue by identifying regions with too small design variance(< 1e-30), and deleting the clusters in these regions, before fitting the model. However, this step creates <span style="color:red">additional bias</span> in the results if the number of clusters deleted is large.

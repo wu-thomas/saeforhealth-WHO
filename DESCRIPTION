@@ -1,0 +1,61 @@
+Package: saeforhealth
+Title: Small Area Estimation for Health Indicators
+Version: 1.0.0
+Authors@R: person('Yunhan', 'Wu', email = 'yunhanwu@uw.edu', role = c('cre', 'aut'))
+Description: The Shiny app for performing small area estimation and prevalence mapping of maternal health indicators in the region of Africa. The app is an user friendly implemtation of R package surveyPrev.
+License: MIT + file LICENSE
+URL: https://github.com/wu-thomas/saeforhealth-WHO
+BugReports: https://github.com/wu-thomas/saeforhealth-WHO/issues
+Imports: 
+    bookdown,
+    config (>= 0.3.2),
+    dplyr,
+    DT,
+    geodata,
+    ggplot2,
+    ggridges,
+    ggspatial,
+    ggthemes,
+    golem (>= 0.4.1),
+    HatchedPolygons,
+    haven,
+    htmltools,
+    htmlwidgets,
+    httr,
+    INLA,
+    leaflegend,
+    leaflet,
+    leafsync,
+    magrittr,
+    mapview,
+    markdown,
+    patchwork,
+    pkgload,
+    plotly,
+    prettymapr,
+    R.utils,
+    R6,
+    RColorBrewer,
+    rdhs,
+    readr,
+    scales,
+    sf,
+    shiny (>= 1.8.1.1),
+    shinyBS,
+    shinydashboard,
+    shinyFeedback,
+    shinyjs,
+    shinyWidgets,
+    sn,
+    SUMMER,
+    survey,
+    surveyPrev,
+    tidyr,
+    viridisLite
+Remotes:
+    statnmap/HatchedPolygons,
+    rspatial/geodata,
+    richardli/SurveyPrev
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1

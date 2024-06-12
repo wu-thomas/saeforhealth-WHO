@@ -1,0 +1,23 @@
+---
+title: "Methods for Survey Prev"
+output:
+  bookdown::html_book:
+    number_sections: false
+---
+ 
+
+### <span style="color:royalblue">Unit-level (Cluster-level) Model</span>
+
+Unit-level models assume smoothing models for counts of events in each cluster (Wakefield, Okonek, and
+Pedersen 2020; Li et al. 2020). In terms of traditional Small Area Estimation literature, cluster-level models are a type of unit-level model. Currently, the app implements an unstratified model without taking into account the urban/rural stratification in the sampling design.
+
+Let $Y_c$ be the number of events in cluster $c$, and $n_c$ be the number of individuals at risk, where $c= 1,\dots,C$. The unstratified model assumes the hierarchical structure:
+
+$$Y_c \mid p_c,d\sim \textrm{BetaBinomial}(n_c,p_c,d),$$
+$$p_c=\textrm{expit}(\alpha+e_{i[s_c]}+S_{i[s_c]}),$$
+
+where $\alpha$ is the intercept, and $i[s_c]$ indexes the area within which the cluster $s_c$ resides. Similar to the area-level model, $e_i$ and $S_i$ are unstructured and structured spatial random effects with the same prior as before. The Beta-binomial distribution arise from a hierarchical model where the probability follows a $\text{Beta}(a, b)$ prior. The overdispersion parameter, $d=\frac{1}{\alpha+\beta+1}$, is between 0 and 1 and represent the the intracluster correlation between Bernoulli draws within cluster.
+<!-- , corr($z_k,z_{k'}$), where $z_k$ is the binary response in $y_c$, $y_c=\sum_{k=1}^{n_c}z_k$). -->
+The default prior for $d$ is $\text{logit}(d) \sim \text{Normal}(0,0.4)$.  
+
+The app implements the unit-level model via `surveyPrev::clusterModel()` function, with BYM2 model for the spatial random effects. The app currently only supports unstratified models. Please refer to **surveyPrev** package for stratified unit-level model.

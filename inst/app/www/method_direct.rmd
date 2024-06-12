@@ -1,0 +1,38 @@
+---
+title: "Methods for Survey Prev"
+output:
+  bookdown::html_book:
+    number_sections: false
+---
+ 
+
+### <span style="color:royalblue">Direct estimates</span>
+
+For $y_j$ be the binary outcome of interest for the $j^{\text{th}}$ individual in the survey and $w_j$ be the design weight associated with this individual.  For a given area denoted as $i$, we have the weighted estimator: $\hat{p}^{W}_{i} = \frac{\sum_{j \in S_i} y_j \cdot w_j}{\sum_{j \in S_i} w_j}$, where $S_i$ is the set of individual index within the $i$-th region. 
+
+Direct estimates at different Admin levels are calculated using `surveyPrev::directEST()` in the **surveyPrev** package and `SUMMER::smoothSurvey()` function in the **SUMMER** package internally (Li et al. 2020).
+
+The confidence intervals are computed on the logit scale, i.e., if we use $D_i$ to denote the design-based variance of $\hat p^{W}_i$, then the asymptotic design-based variance of $\text{logit}(\hat p^{W}_i)$ is
+
+$$
+V_i = \frac{D_i}{(\hat{p}^{W}_i)^2 \times (1 - \hat{p}^{W}_i)^2}
+$$
+and we compute the confidence interval on the probability scale by exponentiation of the confidence interval at logit scale. 
+
+Currently the package defaults to a two-stage stratified cluster sampling design, with the sampling clusters (enumeration areas) being stratified by Admin-1 (certain countries Admin-2) areas and urban/rural strata, which is the most common sampling design in the DHS. 
+
+Note that under this model, the expected death counts for the same week/month over different years remains the same, thus it does not account for any across-year variation or time trend. The standard error of the expected death count $\tilde Y_t$ is estimated by the sample standard deviation of the death counts in the same month/week during pre-pandemic years, divided by the square root of the number of observations used to compute the sample average.
+
+Finally the 95% lower and upper confidence interval of the expected deaths are computed by the Wald type interval 
+$$
+(\tilde Y_t - 1.96\times SE(\tilde Y_t),  \tilde Y_t + 1.96\times SE(\tilde Y_t))
+$$ 
+
+The excess death counts are computed by 
+$$
+  E_t = Y_t - \tilde Y_t
+$$
+and the 95% confidence interval is given by 
+$$
+(Y_t - \tilde Y_t - 1.96\times SE(\tilde Y_t), Y_t - \tilde Y_t + 1.96\times SE(\tilde Y_t))
+$$ 
