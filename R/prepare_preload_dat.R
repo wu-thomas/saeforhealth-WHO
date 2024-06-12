@@ -231,7 +231,7 @@ read_WHO_shp <- function(file_path,adm_level=0){
     WHO.shp <- WHO.shp[WHO.shp$ISO_3_CODE %in% WHO.app.countries.ISO3,]
 
     WHO.shp <- sf::st_as_sf(WHO.shp)
-    WHO.shp <- st_transform(WHO.shp,4326)
+    WHO.shp <- sf::st_transform(WHO.shp,4326)
   },error = function(e) {
     message(e$message)
     return(NULL)
@@ -318,7 +318,7 @@ prepare_WHO_country_shp <- function(country.ISO3,
       wrong_row <- which(sf::st_is_valid(country.adm1.shp)==F)
       country.adm1.shp[wrong_row,] <- sf::st_make_valid(country.adm1.shp[wrong_row,])
       country.adm1.shp <- sf::st_as_sf(country.adm1.shp)
-      country.adm1.shp <- st_transform(country.adm1.shp,4326)
+      country.adm1.shp <- sf::st_transform(country.adm1.shp,4326)
 
       message('Fixed invalid shapefile.')
 
@@ -356,7 +356,7 @@ prepare_WHO_country_shp <- function(country.ISO3,
       wrong_row <- which(sf::st_is_valid(country.adm2.shp)==F)
       country.adm2.shp[wrong_row,] <- sf::st_make_valid(country.adm2.shp[wrong_row,])
       country.adm2.shp <- sf::st_as_sf(country.adm2.shp)
-      country.adm2.shp <- st_transform(country.adm2.shp,4326)
+      country.adm2.shp <- sf::st_transform(country.adm2.shp,4326)
 
       message('Fixed invalid shapefile.')
 
@@ -426,7 +426,7 @@ if(FALSE){
   natl.WHO.shp <- natl.WHO.shp[natl.WHO.shp$ISO_3_CODE %in% WHO.app.countries.ISO3,]
 
   natl.WHO.shp <- sf::st_as_sf(natl.WHO.shp)
-  natl.WHO.shp <- st_transform(natl.WHO.shp,4326)
+  natl.WHO.shp <- sf::st_transform(natl.WHO.shp,4326)
 
   #######################
   ### process Admin-1
@@ -437,7 +437,7 @@ if(FALSE){
   adm1.WHO.shp <- adm1.WHO.shp[adm1.WHO.shp$ISO_3_CODE %in% WHO.app.countries.ISO3,]
 
   adm1.WHO.shp <- sf::st_as_sf(adm1.WHO.shp)
-  adm1.WHO.shp <- st_transform(adm1.WHO.shp,4326)
+  adm1.WHO.shp <- sf::st_transform(adm1.WHO.shp,4326)
 
   #######################
   ### process Admin-2
@@ -448,7 +448,7 @@ if(FALSE){
   adm2.WHO.shp <- adm2.WHO.shp[adm2.WHO.shp$ISO_3_CODE %in% WHO.app.countries.ISO3,]
 
   adm2.WHO.shp <- sf::st_as_sf(adm2.WHO.shp)
-  adm2.WHO.shp <- st_transform(adm2.WHO.shp,4326)
+  adm2.WHO.shp <- sf::st_transform(adm2.WHO.shp,4326)
 
   #tmp.adm2.ctry <- adm2.WHO.shp[adm2.WHO.shp$ISO_3_CODE=='BFA',]
   #tmp.adm2.link <- adm2.link.all[adm2.link.all$ISO.3.DIGIT.COUNTRY.CODE=='BFA',]
@@ -506,7 +506,7 @@ if(FALSE){
         wrong_row <- which(sf::st_is_valid(country.adm1.shp)==F)
         country.adm1.shp[wrong_row,] <- sf::st_make_valid(country.adm1.shp[wrong_row,])
         country.adm1.shp <- sf::st_as_sf(tmp.adm)
-        country.adm1.shp <- st_transform(country.adm1.shp,4326)
+        country.adm1.shp <- sf::st_transform(country.adm1.shp,4326)
 
         message('Fixed invalid shapefile.')
 
@@ -544,7 +544,7 @@ if(FALSE){
         wrong_row <- which(sf::st_is_valid(country.adm2.shp)==F)
         country.adm2.shp[wrong_row,] <- sf::st_make_valid(country.adm2.shp[wrong_row,])
         country.adm2.shp <- sf::st_as_sf(tmp.adm)
-        country.adm2.shp <- st_transform(country.adm2.shp,4326)
+        country.adm2.shp <- sf::st_transform(country.adm2.shp,4326)
 
         message('Fixed invalid shapefile.')
 
@@ -625,7 +625,7 @@ if(FALSE){
 
         tmp.adm <- sf::st_make_valid(tmp.adm)
         tmp.adm <- sf::st_as_sf(tmp.adm)
-        tmp.adm <- st_transform(tmp.adm,4326)
+        tmp.adm <- sf::st_transform(tmp.adm,4326)
 
         country.shp.list[[tmp.name]] <- tmp.adm
 
