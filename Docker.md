@@ -62,7 +62,7 @@ The current file builds off of the [rocker images](https://rocker-project.org/) 
 
 ### Building the docker image and pushing to the docker hub registry
 
-1. Build the image using the Dockerfile instructions: `docker build --platform linux/amd64 --build-arg CACHEBUST=(date +%s) -t chacalle333/surveyprevrshinywho:test .` or in Windows docker build --platform linux/amd64 --build-arg CACHEBUST=$(Get-Date -UFormat %s) -t yunhanwu/saeforhealth::v1.0.0 .
+1. Build the image using the Dockerfile instructions: `docker build --platform linux/amd64 --build-arg CACHEBUST=(date +%s) -t chacalle333/surveyprevrshinywho:test .` or in Windows `docker build --platform linux/amd64 --build-arg CACHEBUST=$(Get-Date -UFormat %s) -t yunhanwu/saeforhealth:v1.0.0 .`
 
 
 2. Can test using the image with the directions above.
