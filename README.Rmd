@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# SurveyPrevRshinyWHO
+# RShiny-app saeforhealth (WHO)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -39,7 +39,7 @@ install.packages("INLA",repos=c(getOption("repos"),
 
 
 
-You can then install the development version of SurveyPrevRshinyWHO with:
+You can then install the development version of saeforhealth with:
 
 ``` {r, eval=F, echo=T}
 devtools::install_github("wu-thomas/saeforhealth-WHO")

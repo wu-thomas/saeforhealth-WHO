@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SurveyPrevRshinyWHO
+# RShiny-app saeforhealth (WHO)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -39,8 +39,7 @@ install.packages("INLA",repos=c(getOption("repos"),
                         INLA="https://inla.r-inla-download.org/R/testing"),dep=TRUE)
 ```
 
-You can then install the development version of SurveyPrevRshinyWHO
-with:
+You can then install the development version of saeforhealth with:
 
 ``` r
 devtools::install_github("wu-thomas/saeforhealth-WHO")
