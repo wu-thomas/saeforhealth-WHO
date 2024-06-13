@@ -24,27 +24,31 @@ The application streamlines the analytical process into clear, manageable steps.
 
 The Github repo maintains the source code for this RShiny application and it is structured as an R package. There are three primary venues to utilize this application:
 
-1. Web-Based Version:
+1. **Web-Based Version**:
 
 * Location: Deployed on the online server.
 * Requirements: Internet access and a web browser.
 * Usage: Ideal for users who prefer quick access without local setup.
 
-2. Local R Package Installation:
+2. **Local R Package Installation**:
 
 * Requirements: R environment and dependent packages.
 * Usage: Suitable for users who wish to run the application directly within their local R environment. This method allows for enhanced customization.
 
-3. Docker Deployment:
+3. **Docker Deployment**:
 
 * Requirements: Docker Desktop installation.
 * Usage: Perfect for users who do not have R installed but prefer to run the Shiny app locally. This method encapsulates the application within a Docker image, simplifying environment setup and ensuring compatibility.
 
 Further details on the usage of this application via the above methods, including step-by-step guide for installation, are available in the subsequent sections. 
 
+## Web-based app
 
-## Installation 
+The RShiny application is readily accessible via [https://rsc.stat.washington.edu/saeforhealth](https://rsc.stat.washington.edu/saeforhealth). The only requirement is a stable internet connection. This web-based deployment supports full functionality and serves as the primary distribution channel.
 
+This version uniquely includes preloaded shapefiles, due to legal restrictions on sharing raw data for shapefiles. If using other versions of the app, users will need to upload shapefiles manually; however, this process has been streamlined into simple steps for ease of use.
+
+## Installation of the app as a R package
 
 Some non-CRAN dependencies can be installed using the following command. We strongly recommend installing the most recent version of SUMMER and surveyPrev package from Github. 
 
@@ -59,20 +63,78 @@ install.packages("INLA",repos=c(getOption("repos"),
 ```
 
 
-
 You can then install the development version of saeforhealth with:
 
 ``` {r, eval=F, echo=T}
 devtools::install_github("wu-thomas/saeforhealth-WHO")
 ```
 
-## Launch the app
-
-You can launch the Shiny app with the following command:
+You can launch the Shiny app with the following command, and we recommend opening a new browser tab from within the launched shiny app for better accessing web links.
 
 ```{r, eval=F, echo=T}
 library(saeforhealth)
 saeforhealth::run_app()
 
 ```
+
+
+## Deploy the app as a Docker image
+
+The user need to first install the Docker desktop app from [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/).
+Windows users may need to enable the Windows Subsystem for Linux (WSL), which can be done by executing the ‘wsl  --install' in the command line.
+Several methods are available for deploying this RShiny app locally using Docker. Special thanks to \@Charlton Callender for providing these deployment techniques.
+
+### Docker desktop app
+
+1. Open the Docker desktop app
+
+2. Download the image:
+    - This is only required the first time you use the app or for downloading a new version/tag.
+    - In the search bar, search for 'yunhanwu/saeforhealth:v1.0.1'.
+    - Hover cursor over relevant result and click 'Pull'.
+
+3. Run a container with the downloaded image:
+    - From sidebar, open 'Images' -> 'Local'. Should now have a row for 'Name'='yunhanwu/saeforhealth' and 'Tag'='v1.0.1'. 
+    - Under actions click 'Run' (the play button).
+    - Expand 'optional settings'.
+      - Under 'Ports': Fill 'Host port' with '3838'.
+    - Click 'Run'
+
+4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+
+5. When done, close the webpage and:
+    - From sidebar, open 'Containers'.
+    - Look for rows with 'Image'='yunhanwu/saeforhealth' & Status = 'Running'.
+    - Under 'Actions' click 'Stop'
+
+### command line (with internet access)
+
+1. Open the command line.
+
+2. Download the image: `docker pull yunhanwu/saeforhealth:v1.0.1`
+
+3. Run a container with the downloaded image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
+
+4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+
+5. When done, close the webpage and:
+    - From sidebar, open 'Containers'.
+    - Look for rows with 'Image'='yunhanwu/saeforhealth' & Status = 'Running'.
+    - Under 'Actions' click 'Stop'
+
+### command line (with file copy of image)
+
+1. Open the command line.
+
+2. Obtain the docker image in tar format from another source. Load into docker with: `docker load --input file_path.tar`
+
+3. Run a container with the downloaded image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
+
+4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+
+5. When done, close the webpage and:
+    - From sidebar, open 'Containers'.
+    - Look for rows with 'Image'='yunhanwu/saeforhealth' & Status = 'Running'.
+    - Under 'Actions' click 'Stop'
+
 
