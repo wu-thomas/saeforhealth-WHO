@@ -52,9 +52,9 @@ Further details on the usage of this application via the above methods,
 including step-by-step guide for installation, are available in the
 subsequent sections.
 
-## Web-based app
+## Web-based RShiny app
 
-The RShiny application is readily accessible via
+The RShiny app is readily accessible via
 <https://rsc.stat.washington.edu/saeforhealth>. The only requirement is
 a stable internet connection. This web-based deployment supports full
 functionality and serves as the primary distribution channel.
@@ -64,7 +64,7 @@ restrictions on sharing raw data for shapefiles. If using other versions
 of the app, users will need to upload shapefiles manually; however, this
 process has been streamlined into simple steps for ease of use.
 
-## Installation of the app as a R package
+## Installation of the RShiny app as a R package
 
 Some non-CRAN dependencies can be installed using the following command.
 We strongly recommend installing the most recent version of SUMMER and
@@ -86,8 +86,8 @@ You can then install the development version of saeforhealth with:
 devtools::install_github("wu-thomas/saeforhealth-WHO")
 ```
 
-You can launch the Shiny app with the following command, and we
-recommend opening a new browser tab from within the launched shiny app
+You can launch the RShiny app with the following command, and we
+recommend opening a new browser tab from within the launched RShiny app
 for better accessing web links.
 
 ``` r
@@ -95,7 +95,7 @@ library(saeforhealth)
 saeforhealth::run_app()
 ```
 
-## Deploy the app as a Docker image
+## Deploy the RShiny app as a Docker image
 
 The user need to first install the Docker desktop app from
 <https://docs.docker.com/get-docker/>. Windows users may need to enable
@@ -124,7 +124,7 @@ for deploying this RShiny app locally using Docker. Special thanks to
       - Under ‘Ports’: Fill ‘Host port’ with ‘3838’.
     - Click ‘Run’
 
-4.  Open the app in your web browser by navigating to
+4.  Open the RShiny app in your web browser by navigating to
     ‘<http://localhost:3838/>’.
 
 5.  When done, close the webpage and:
@@ -134,7 +134,7 @@ for deploying this RShiny app locally using Docker. Special thanks to
       ‘Running’.
     - Under ‘Actions’ click ‘Stop’
 
-### command line (with internet access)
+### Command line (with internet access)
 
 1.  Open the command line.
 
@@ -143,7 +143,7 @@ for deploying this RShiny app locally using Docker. Special thanks to
 3.  Run a container with the downloaded
     image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
 
-4.  Open the app in your web browser by navigating to
+4.  Open the RShiny app in your web browser by navigating to
     ‘<http://localhost:3838/>’.
 
 5.  When done, close the webpage and:
@@ -153,7 +153,7 @@ for deploying this RShiny app locally using Docker. Special thanks to
       ‘Running’.
     - Under ‘Actions’ click ‘Stop’
 
-### command line (with file copy of image)
+### Command line (with file copy of image)
 
 1.  Open the command line.
 
@@ -163,7 +163,7 @@ for deploying this RShiny app locally using Docker. Special thanks to
 3.  Run a container with the downloaded
     image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
 
-4.  Open the app in your web browser by navigating to
+4.  Open the RShiny app in your web browser by navigating to
     ‘<http://localhost:3838/>’.
 
 5.  When done, close the webpage and:

@@ -42,13 +42,13 @@ The Github repo maintains the source code for this RShiny application and it is 
 
 Further details on the usage of this application via the above methods, including step-by-step guide for installation, are available in the subsequent sections. 
 
-## Web-based app
+## Web-based RShiny app
 
-The RShiny application is readily accessible via [https://rsc.stat.washington.edu/saeforhealth](https://rsc.stat.washington.edu/saeforhealth). The only requirement is a stable internet connection. This web-based deployment supports full functionality and serves as the primary distribution channel.
+The RShiny app is readily accessible via [https://rsc.stat.washington.edu/saeforhealth](https://rsc.stat.washington.edu/saeforhealth). The only requirement is a stable internet connection. This web-based deployment supports full functionality and serves as the primary distribution channel.
 
 This version uniquely includes preloaded shapefiles, due to legal restrictions on sharing raw data for shapefiles. If using other versions of the app, users will need to upload shapefiles manually; however, this process has been streamlined into simple steps for ease of use.
 
-## Installation of the app as a R package
+## Installation of the RShiny app as a R package
 
 Some non-CRAN dependencies can be installed using the following command. We strongly recommend installing the most recent version of SUMMER and surveyPrev package from Github. 
 
@@ -69,7 +69,7 @@ You can then install the development version of saeforhealth with:
 devtools::install_github("wu-thomas/saeforhealth-WHO")
 ```
 
-You can launch the Shiny app with the following command, and we recommend opening a new browser tab from within the launched shiny app for better accessing web links.
+You can launch the RShiny app with the following command, and we recommend opening a new browser tab from within the launched RShiny app for better accessing web links.
 
 ```{r, eval=F, echo=T}
 library(saeforhealth)
@@ -78,7 +78,7 @@ saeforhealth::run_app()
 ```
 
 
-## Deploy the app as a Docker image
+## Deploy the RShiny app as a Docker image
 
 The user need to first install the Docker desktop app from [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/).
 Windows users may need to enable the Windows Subsystem for Linux (WSL), which can be done by executing the ‘wsl  --install' in the command line.
@@ -100,14 +100,14 @@ Several methods are available for deploying this RShiny app locally using Docker
       - Under 'Ports': Fill 'Host port' with '3838'.
     - Click 'Run'
 
-4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+4. Open the RShiny app in your web browser by navigating to 'http://localhost:3838/'.
 
 5. When done, close the webpage and:
     - From sidebar, open 'Containers'.
     - Look for rows with 'Image'='yunhanwu/saeforhealth' & Status = 'Running'.
     - Under 'Actions' click 'Stop'
 
-### command line (with internet access)
+### Command line (with internet access)
 
 1. Open the command line.
 
@@ -115,14 +115,14 @@ Several methods are available for deploying this RShiny app locally using Docker
 
 3. Run a container with the downloaded image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
 
-4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+4. Open the RShiny app in your web browser by navigating to 'http://localhost:3838/'.
 
 5. When done, close the webpage and:
     - From sidebar, open 'Containers'.
     - Look for rows with 'Image'='yunhanwu/saeforhealth' & Status = 'Running'.
     - Under 'Actions' click 'Stop'
 
-### command line (with file copy of image)
+### Command line (with file copy of image)
 
 1. Open the command line.
 
@@ -130,7 +130,7 @@ Several methods are available for deploying this RShiny app locally using Docker
 
 3. Run a container with the downloaded image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
 
-4. Open the app in your web browser by navigating to 'http://localhost:3838/'.
+4. Open the RShiny app in your web browser by navigating to 'http://localhost:3838/'.
 
 5. When done, close the webpage and:
     - From sidebar, open 'Containers'.
