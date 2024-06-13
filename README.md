@@ -35,7 +35,7 @@ utilize this application:
 
 2.  **Local R Package Installation**:
 
-- Location: on user’s machine, launched by Rstudio.
+- Location: on user’s machine, launched by RStudio.
 - Requirements: R environment and dependent packages.
 - Usage: Suitable for users who wish to run the application directly
   within their local R environment. This method allows for enhanced
