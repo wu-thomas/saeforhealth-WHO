@@ -23,6 +23,34 @@ interface. Additionally, the application supports result exports,
 facilitating detailed examinations and sharing in both spreadsheet and
 graphical formats.
 
+The Github repo maintains the source code for this RShiny application
+and it is structured as an R package. There are three primary venues to
+utilize this application:
+
+1.  Web-Based Version:
+
+- Location: Deployed on the online server.
+- Requirements: Internet access and a web browser.
+- Usage: Ideal for users who prefer quick access without local setup.
+
+2.  Local R Package Installation:
+
+- Requirements: R environment and dependent packages.
+- Usage: Suitable for users who wish to run the application directly
+  within their local R environment. This method allows for enhanced
+  customization.
+
+3.  Docker Deployment:
+
+- Requirements: Docker Desktop installation.
+- Usage: Perfect for users who do not have R installed. This method
+  encapsulates the application within a Docker image, simplifying setup
+  and ensuring compatibility.
+
+Further details on the usage of this application via the above methods,
+including step-by-step guide for installation, are available in the
+subsequent sections.
+
 ## Installation
 
 Some non-CRAN dependencies can be installed using the following command.

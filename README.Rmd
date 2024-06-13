@@ -22,7 +22,28 @@ This RShiny app facilitates the mapping of health indicators prevalence using da
 
 The application streamlines the analytical process into clear, manageable steps. It guides users through model fitting and enhances their experience with interactive visualization tools. Users can dynamically explore the spatial distribution of health and demographic indicators and directly interpret statistical outputs within the app’s interface. Additionally, the application supports result exports, facilitating detailed examinations and sharing in both spreadsheet and graphical formats.
 
-## Installation
+The Github repo maintains the source code for this RShiny application and it is structured as an R package. There are three primary venues to utilize this application:
+
+1. Web-Based Version:
+
+* Location: Deployed on the online server.
+* Requirements: Internet access and a web browser.
+* Usage: Ideal for users who prefer quick access without local setup.
+
+2. Local R Package Installation:
+
+* Requirements: R environment and dependent packages.
+* Usage: Suitable for users who wish to run the application directly within their local R environment. This method allows for enhanced customization.
+
+3. Docker Deployment:
+
+* Requirements: Docker Desktop installation.
+* Usage: Perfect for users who do not have R installed but prefer to run the Shiny app locally. This method encapsulates the application within a Docker image, simplifying environment setup and ensuring compatibility.
+
+Further details on the usage of this application via the above methods, including step-by-step guide for installation, are available in the subsequent sections. 
+
+
+## Installation 
 
 
 Some non-CRAN dependencies can be installed using the following command. We strongly recommend installing the most recent version of SUMMER and surveyPrev package from Github. 
