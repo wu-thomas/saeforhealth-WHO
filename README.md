@@ -57,8 +57,8 @@ subsequent sections.
 ## Web-based RShiny app
 
 The RShiny app is readily accessible via
-<https://rsc.stat.washington.edu/saeforhealth>. The only requirement is
-a stable internet connection. This web-based deployment supports full
+<https://cernunosat90.cern.ch/>. The only requirement is a stable
+internet connection. This web-based deployment supports full
 functionality and serves as the primary distribution channel.
 
 This version uniquely includes preloaded shapefiles, due to legal
