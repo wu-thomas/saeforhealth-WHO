@@ -29,12 +29,13 @@ utilize this application:
 
 1.  **Web-Based Version**:
 
-- Location: Deployed on the online server.
+- Location: Deployed on an online server.
 - Requirements: Internet access and a web browser.
 - Usage: Ideal for users who prefer quick access without local setup.
 
 2.  **Local R Package Installation**:
 
+- Location: on user’s machine, launched by Rstudio.
 - Requirements: R environment and dependent packages.
 - Usage: Suitable for users who wish to run the application directly
   within their local R environment. This method allows for enhanced
@@ -42,6 +43,7 @@ utilize this application:
 
 3.  **Docker Deployment**:
 
+- Location: on user’s machine.
 - Requirements: Docker Desktop installation.
 - Usage: Perfect for users who do not have R installed but prefer to run
   the Shiny app locally. This method encapsulates the application within
