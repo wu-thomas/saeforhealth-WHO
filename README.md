@@ -31,7 +31,7 @@ utilize this application:
 
 - Location: Deployed on an online server.
 - Requirements: Internet access and a web browser.
-- Usage: Ideal for users who prefer quick access without local setup and have stable Internet access.
+- Usage: Ideal for users who prefer quick access without local setup.
 
 2.  **Local R Package Installation**:
 
@@ -57,8 +57,8 @@ subsequent sections.
 ## Web-based RShiny app
 
 The RShiny app is readily accessible via
-<https://cernunosat90.cern.ch/>. The only requirement is a stable
-internet connection. This web-based deployment supports full
+<https://rsc.stat.washington.edu/saeforhealth/>. The only requirement is
+a stable internet connection. This web-based deployment supports full
 functionality and serves as the primary distribution channel.
 
 This version uniquely includes preloaded shapefiles, due to legal
@@ -78,6 +78,8 @@ devtools::install_github("rspatial/geodata")
 devtools::install_github("richardli/SUMMER")
 devtools::install_github("richardli/surveyPrev")
 devtools::install_github("statnmap/HatchedPolygons")
+devtools::install_github("qianyu313/surveyPrevGithub")
+
 install.packages("INLA",repos=c(getOption("repos"),
                         INLA="https://inla.r-inla-download.org/R/testing"),dep=TRUE)
 ```
@@ -86,6 +88,13 @@ You can then install the development version of saeforhealth with:
 
 ``` r
 devtools::install_github("wu-thomas/saeforhealth-WHO")
+```
+
+Our tool works exclusively for 2.12.0 version of the labelled package,
+so we make sure the correct version is used.
+
+``` r
+remotes::install_version("labelled", "2.12.0")
 ```
 
 You can launch the RShiny app with the following command, and we
@@ -114,14 +123,13 @@ for deploying this RShiny app locally using Docker. Special thanks to
 
     - This is only required the first time you use the app or for
       downloading a new version/tag.
-    - In the search bar, search for ‘yunhanwu/saeforhealth’, click 'Images' & 'Hub images'.
-    - There should now be one result returned, use the 'Tag' selection to get the latest or other requested version. For example 'v1.0.1'.
-    - Finally, click ‘Pull’.
+    - In the search bar, search for ‘yunhanwu/saeforhealth:v1.0.1’.
+    - Hover cursor over relevant result and click ‘Pull’.
 
 3.  Run a container with the downloaded image:
 
     - From sidebar, open ‘Images’ -\> ‘Local’. Should now have a row for
-      ‘Name’=‘yunhanwu/saeforhealth’ and ‘Tag’=‘v1.0.1’ (or other updated version).
+      ‘Name’=‘yunhanwu/saeforhealth’ and ‘Tag’=‘v1.0.1’.
     - Under actions click ‘Run’ (the play button).
     - Expand ‘optional settings’.
       - Under ‘Ports’: Fill ‘Host port’ with ‘3838’.
@@ -141,16 +149,20 @@ for deploying this RShiny app locally using Docker. Special thanks to
 
 1.  Open the command line.
 
-2.  Download the image: `docker pull yunhanwu/saeforhealth:v1.0.1`. Note: you may need to replace the tag 'v1.0.1' with a newer version tag.
+2.  Download the image: `docker pull yunhanwu/saeforhealth:v1.0.1`
 
-4.  Run a container with the downloaded
-    image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`. Note: you may need to replace the tag 'v1.0.1' with a newer version tag.
+3.  Run a container with the downloaded
+    image:　`docker run --rm -p 3838:3838 yunhanwu/saeforhealth:v1.0.1`
 
-5.  Open the RShiny app in your web browser by navigating to
+4.  Open the RShiny app in your web browser by navigating to
     ‘<http://localhost:3838/>’.
 
-6.  When done, return to the command line and stop the running container with control + C.
+5.  When done, close the webpage and:
 
+    - From sidebar, open ‘Containers’.
+    - Look for rows with ‘Image’=‘yunhanwu/saeforhealth’ & Status =
+      ‘Running’.
+    - Under ‘Actions’ click ‘Stop’
 
 ### Command line (with file copy of image)
 
@@ -165,4 +177,9 @@ for deploying this RShiny app locally using Docker. Special thanks to
 4.  Open the RShiny app in your web browser by navigating to
     ‘<http://localhost:3838/>’.
 
-5.  When done, return to the command line and stop the running container with control + C.
+5.  When done, close the webpage and:
+
+    - From sidebar, open ‘Containers’.
+    - Look for rows with ‘Image’=‘yunhanwu/saeforhealth’ & Status =
+      ‘Running’.
+    - Under ‘Actions’ click ‘Stop’
