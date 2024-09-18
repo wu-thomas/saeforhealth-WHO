@@ -57,7 +57,7 @@ Imports:
 Remotes:
     statnmap/HatchedPolygons,
     rspatial/geodata,
-    richardli/SurveyPrev
+    richardli/SurveyPrev,
     qianyu313/surveyPrevGithub
 Encoding: UTF-8
 LazyData: true
