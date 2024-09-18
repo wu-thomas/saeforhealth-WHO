@@ -90,7 +90,7 @@ You can then install the development version of saeforhealth with:
 devtools::install_github("wu-thomas/saeforhealth-WHO")
 ```
 
-Our tool works exclusively for 2.12.0 version of the labelled package,
+Our tool depends specifically on 2.12.0 version of the labelled package,
 so we make sure the correct version is used.
 
 ``` r
