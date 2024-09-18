@@ -10,7 +10,7 @@
 #'
 
 
-#surveyPrev_ind_list <-  full_ind_des # surveyPrev::surveyPrevIndicators
+#surveyPrev_ind_list <-  ref_tab_all # surveyPrev::surveyPrevIndicators
 #surveyPrev_ind_list <- surveyPrev::surveyPrevIndicators
 
 #indicator_choices_vector <- setNames(surveyPrev_ind_list$ID, surveyPrev_ind_list$Description)
@@ -78,7 +78,8 @@ mod_country_specify_ui <- function(id){
              shinyWidgets::pickerInput(ns("Svy_indicator"),  with_red_star("Choose an indicator "),
                                        choices = character(0),
                                        multiple = F,
-                                       selected = NULL),
+                                       selected = NULL,
+                                       options = list(`liveSearch` = TRUE) ),
 
              tags$hr(style="border-top-color: #E0E0E0;"), # (style="border-top: 2px solid #707070;")
 
@@ -130,7 +131,7 @@ mod_country_specify_ui <- function(id){
                style = "width: max(50%, 600px); margin: auto; margin-top: 20px; float: left;",
                uiOutput(ns("mapUI"))
              ))
-    )#,
+    ),
     #fluidRow(column(12,
     #actionButton(ns("switch_bar"), "Switch to another panel")))
 
@@ -148,7 +149,7 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
 
     observeEvent(input$switch_bar, {
       message('switching')
-      updateTabItems(parent_session, "Overall_tabs", selected = "data_upload")
+      shinydashboard::updateTabItems(parent_session, "Overall_tabs", selected = "data_upload")
     })
 
 
@@ -159,10 +160,16 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
 
 
     ### storing shapefiles as reactive vals
-
-    WHO.shp.natl <- reactiveVal(natl.WHO.shp)
+    WHO.shp.natl <- reactiveVal(NULL)
     WHO.shp.adm1 <- reactiveVal(NULL)
     WHO.shp.adm2 <- reactiveVal(NULL)
+
+    observeEvent(CountryInfo$shapefile_source(),{
+      if(CountryInfo$shapefile_source()=='WHO-download'){
+        WHO.shp.natl(natl.WHO.shp)
+      }
+
+    })
 
 
     ### text instruction on downloading the shapefile
@@ -476,8 +483,8 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
     })
 
     # update indicator group
-    surveyPrev_ind_list <- full_ind_des
-    updateSelectInput(inputId = "Svy_ind_group", choices = sort(unique(full_ind_des$Topic),decreasing = F))
+    surveyPrev_ind_list <- ref_tab_all
+    updateSelectInput(inputId = "Svy_ind_group", choices = sort(unique(ref_tab_all$Topic),decreasing = F))
 
 
     ### preload Zambia
@@ -541,7 +548,7 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
 
       freezeReactiveValue(input, "Svy_year")
 
-      req(CountryInfo$WHO_version())
+      #req(CountryInfo$WHO_version())
 
 
       if (!all(sapply(CountryInfo$svy_dat_list(), is.null))| !is.null(CountryInfo$svy_GPS_dat()) ) {
@@ -608,7 +615,7 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
         message(paste0('changed to ',CountryInfo$country()))
         updateSelectInput(inputId = "country", selected = CountryInfo$country(),
                           choices = c('',country_name_list))
-        #updateSelectInput(inputId = "Svy_ind_group", choices = sort(unique(full_ind_des$Topic),decreasing = F))
+        #updateSelectInput(inputId = "Svy_ind_group", choices = sort(unique(ref_tab_all$Topic),decreasing = F))
 
 
 
@@ -791,14 +798,17 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
 
         current_svy_ind_group_selection(input$Svy_ind_group)  # Update the valid selection to the new value
 
-        group_ind_list <- full_ind_des %>%
+        group_ind_list <- ref_tab_all %>%
           subset( Topic==input$Svy_ind_group)
 
         indicator_choices_vector <- setNames(group_ind_list$ID, group_ind_list$Description)
 
         ind_choice_vec(indicator_choices_vector)
 
-        shinyWidgets::updatePickerInput(session,inputId = "Svy_indicator", choices = sort(indicator_choices_vector,decreasing = F))
+        shinyWidgets::updatePickerInput(session,
+                                        inputId = "Svy_indicator",
+                                        choices = sort(indicator_choices_vector,decreasing = F),
+                                        options = list(`liveSearch` = TRUE))
 
       }
 
@@ -812,24 +822,27 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
         current_svy_ind_group_selection(input$Svy_ind_group)  # Update the valid selection to the new value
         message(paste0('changed to ',current_svy_ind_group_selection()))
         updateSelectInput(session, "Svy_ind_group", selected = current_svy_ind_group_selection(),
-                          choices =sort(unique(full_ind_des$Topic),decreasing = F))
+                          choices =sort(unique(ref_tab_all$Topic),decreasing = F))
 
         AnalysisInfo$reset_results()
 
 
-        group_ind_list <- full_ind_des %>%
+        group_ind_list <- ref_tab_all %>%
           subset( Topic==input$Svy_ind_group)
 
         indicator_choices_vector <- setNames(group_ind_list$ID, group_ind_list$Description)
         ind_choice_vec(indicator_choices_vector)
 
-        shinyWidgets::updatePickerInput(session,inputId = "Svy_indicator", choices = sort(indicator_choices_vector,decreasing = F))
+        shinyWidgets::updatePickerInput(session,
+                                        inputId = "Svy_indicator",
+                                        choices = sort(indicator_choices_vector,decreasing = F),
+                                        options = list(`liveSearch` = TRUE))
 
 
       } else {
         # User did not confirm, reset the selectInput to the last valid value
         updateSelectInput(session, "Svy_ind_group", selected = current_svy_ind_group_selection(),
-                          choices =sort(unique(full_ind_des$Topic),decreasing = F))
+                          choices =sort(unique(ref_tab_all$Topic),decreasing = F))
       }
     })
 
@@ -893,7 +906,10 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
         # User confirmed the change
         current_svy_ind_selection(input$Svy_indicator)  # Update the valid selection to the new value
         message(paste0('changed to ',current_svy_ind_selection()))
-        shinyWidgets::updatePickerInput(session, "Svy_indicator", selected = current_svy_ind_selection(),choices =ind_choice_vec())
+        shinyWidgets::updatePickerInput(session,
+                                        "Svy_indicator",
+                                        selected = current_svy_ind_selection(),choices =ind_choice_vec(),
+                                        options = list(`liveSearch` = TRUE))
 
         AnalysisInfo$reset_results()
         CountryInfo$svy_indicator_var(input$Svy_indicator)
@@ -901,7 +917,10 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
 
       } else {
         # User did not confirm, reset the selectInput to the last valid value
-        shinyWidgets::updatePickerInput(session, "Svy_indicator", selected = current_svy_ind_selection(),choices =ind_choice_vec())
+        shinyWidgets::updatePickerInput(session,
+                                        "Svy_indicator",
+                                        selected = current_svy_ind_selection(),choices =ind_choice_vec(),
+                                        options = list(`liveSearch` = TRUE))
       }
     })
 
@@ -991,7 +1010,14 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
         " with survey in ",
         "<strong style='background-color: #D0E4F7;'>", svy_year, "</strong>",
         ", to estimate ",
-        "<br> <strong style='background-color: #D0E4F7;'>", CountryInfo$svy_indicator_des(), "</strong>.",
+        "<br> <strong style='background-color: #D0E4F7;'>", CountryInfo$svy_indicator_des(), "</strong>",
+        " (see detailed definition ",
+        actionButton(
+          ns("switch_app_ind"),  # Button ID to trigger the modal
+          "here",
+          style = "border: none; background: none; color: blue; padding: 0; margin-bottom: 3px; font-size: large;"  # Enhanced styling
+        ),
+        ").",
         "<br> You intend to conduct analysis at ",
         "<strong style='background-color: #D0E4F7;'>", concatenate_vector_with_and(CountryInfo$GADM_analysis_levels()), "</strong>",
         " level(s).",
@@ -1003,6 +1029,12 @@ mod_country_specify_server <- function(id,CountryInfo,AnalysisInfo,parent_sessio
       ))
 
 
+    })
+
+
+    ### switch to tab with indicator supported by our app
+    observeEvent(input$switch_app_ind, {
+      shinydashboard::updateTabItems(parent_session, "Overall_tabs", selected = "indicator_in_app")
     })
 
     ### present number of regions at each admin level

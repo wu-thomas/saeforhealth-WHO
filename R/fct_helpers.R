@@ -17,6 +17,8 @@ CountryInfo <- R6::R6Class(
     use_preloaded_Zambia = NULL,
     use_preloaded_Madagascar = NULL,
 
+    website_link = NULL,
+
     use_basemap = NULL,
     WHO_version = NULL, ### whether to use WHO version of the app (difference in countries)
     shapefile_source = NULL, ### WHO-preload, WHO-download, GADM-preload, GADM-download
@@ -48,10 +50,15 @@ CountryInfo <- R6::R6Class(
 
     svy_analysis_dat = NULL,
 
+
+
+
     initialize = function() {
 
       self$use_preloaded_Zambia <- reactiveVal(NULL)
       self$use_preloaded_Madagascar <- reactiveVal(NULL)
+
+      self$website_link <- reactiveVal(NULL)
 
       self$use_basemap <- reactiveVal(NULL)
       self$WHO_version <- reactiveVal(NULL)

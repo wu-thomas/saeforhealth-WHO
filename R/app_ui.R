@@ -64,8 +64,11 @@ app_ui <- function(request) {
     # Your application UI logic
     shinydashboard::dashboardPage(skin = "black",
                                   shinydashboard::dashboardHeader(title = "Small Area Estimation for Improving Maternal Health in the region of Africa",titleWidth='750px'),
+                                  #shinydashboard::dashboardHeader(title = "Small Area Estimation for Improving Health in LMICs",titleWidth='550px'),
                                   shinydashboard::dashboardSidebar(
                                     shinydashboard::sidebarMenu(
+                                      id = "Overall_tabs", ## very important for switching between panels
+                                      shinydashboard::menuItem(HTML("&nbsp Getting Started"), tabName = "get_start", icon = icon("home")),
                                       shinydashboard::menuItem("Country Specification", tabName = "country_spec", icon = icon("globe")),
                                       shinydashboard::menuItem("Data Upload", tabName = "data_upload", icon = icon("database")),
                                       shinydashboard::menuItem("Model Fitting", tabName = "model_fit", icon = icon("sliders-h")),
@@ -74,11 +77,35 @@ app_ui <- function(request) {
                                                                shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp Map Comparison"), tabName = "res_compare_map",icon = NULL),
                                                                shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp Scatter Plot"), tabName = "res_scatter",icon = NULL),
                                                                shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp Ridge Plot"), tabName = "res_ridge",icon = NULL)),
-                                      shinydashboard::menuItem("Result Tabulation", tabName = "res_tab", icon = icon("line-chart"))
+                                      shinydashboard::menuItem("Result Tabulation", tabName = "res_tab", icon = icon("line-chart")),
+                                      shinydashboard::menuItem(HTML("&nbsp Tool Kit"), tabName = "tool_kit", icon = icon("screwdriver-wrench"),
+                                                               shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp Indicators in the App"), tabName = "indicator_in_app",icon = NULL),
+                                                               shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp DHS Indicator Dictionary"), tabName = "indicator_dictionary",icon = NULL),
+                                                               shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp DHS Report Estimate"), tabName = "DHS_API_est",icon = NULL))
           )
       ),
       shinydashboard::dashboardBody(
+        shinyjs::useShinyjs(),
+        shinyjs::extendShinyjs(text =htmlwidgets::JS(
+          "shinyjs.init = function() {",
+          "  $(document).on('shown.bs.tab', 'a[data-toggle=\"tab\"]', function (e) {",
+          "    var activeTab = $(e.target);",
+          "    var menuItem = activeTab.closest('li.treeview');",
+          "    menuItem.addClass('menu-open');",
+          "    menuItem.children('.treeview-menu').css('display', 'block');",
+          "    $('.treeview').each(function () {",
+          "      if ($(this).find('.treeview-menu .active').length) {",
+          "        $(this).addClass('active');",
+          "      } else {",
+          "        $(this).removeClass('active');",
+          "      }",
+          "    });",
+          "  });",
+          "}"
+        ), functions = c("activateTab")),
         shinydashboard::tabItems(
+          shinydashboard::tabItem(tabName = "get_start",
+                                  mod_landing_page_ui("landing_page_1")), # Use the module UI here
           shinydashboard::tabItem(tabName = "country_spec",
                   mod_country_specify_ui("country_specify_1")), # Use the module UI here
           shinydashboard::tabItem(tabName = "data_upload",
@@ -95,7 +122,13 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName = "res_scatter",
                   mod_res_visual_scatter_ui("res_visual_scatter_1")), # Content for Comparison Scatter subtab
           shinydashboard::tabItem(tabName = "res_ridge",
-                  mod_res_visual_ridge_ui("res_visual_ridge_1")) # Content for ridge plot subtab
+                  mod_res_visual_ridge_ui("res_visual_ridge_1")), # Content for ridge plot subtab
+          shinydashboard::tabItem(tabName = "indicator_in_app",
+                                  mod_indicator_in_app_ui("indicator_in_app_1")), # Indicator supported in the app
+          shinydashboard::tabItem(tabName = "indicator_dictionary",
+                  mod_indicator_dictionary_ui("indicator_dictionary_1")), # Indicator Dictionary
+          shinydashboard::tabItem(tabName = "DHS_API_est",
+                                  mod_DHS_API_est_ui("DHS_API_est_1")) # Indicator Dictionary
         )
       ),
      tags$head(tags$style(HTML("
@@ -128,14 +161,14 @@ golem_add_external_resources <- function() {
     #favicon(ext = 'png'),
     bundle_resources(
       path = app_sys("/app/www"),
-      app_title = "saeforhealth"
+      app_title = "SurveyPrevRShiny"
     ),
 
     ### add message handler
     #tags$script(src = "handlers.js"),
 
     ### add style sheets for html objects
-    #tags$link(href = "div_style.css")
+    #tags$link(href = "div_style.css"),
 
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()

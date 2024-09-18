@@ -356,11 +356,35 @@ fit_svy_model <- function(cluster.geo,
                                                 by.adm2 = paste0("NAME_",1))
       }
 
-      res_adm <- surveyPrev::directEST(data=analysis.dat,
-                                       cluster.info= cluster.info,
-                                       admin=0,
-                                       strata="all",
-                                       alt.strata=svy.strata)
+
+
+      res_adm <- tryCatch({
+        # First attempt with alt.strata='v022'
+        surveyPrev::directEST(data = analysis.dat,
+                              cluster.info = cluster.info,
+                              admin = 0,
+                              strata = "all",
+                              alt.strata = 'v022')
+      }, error = function(e) {
+        # If the first attempt fails, try with alt.strata=svy.strata
+        tryCatch({
+          surveyPrev::directEST(data = analysis.dat,
+                                cluster.info = cluster.info,
+                                admin = 0,
+                                strata = "all",
+                                alt.strata = NULL)
+        }, error = function(e) {
+          # If both attempts fail, set res_adm to NULL
+          NULL
+        })
+      })
+#
+#
+#       res_adm <- surveyPrev::directEST(data=analysis.dat,
+#                                        cluster.info= cluster.info,
+#                                        admin=0,
+#                                        strata="all",
+#                                        alt.strata=svy.strata)
 
       ### draw samples using logit.est and logit.var
       sampled.post.vec <- SUMMER::expit(rnorm(nsamp, mean = res_adm$res.admin0$direct.logit.est,

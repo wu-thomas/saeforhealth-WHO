@@ -32,6 +32,14 @@ mod_res_visual_prev_map_ui <- function(id) {
     ),
 
     fluidRow(
+      column(12,
+             div(style = " margin: auto;float: left;margin-top: 5px",
+                 uiOutput(ns("info_display"))
+             )
+      )
+    ),
+
+    fluidRow(
       column(4,
              selectInput(ns("selected_method"), "Select Method",
                          choices = c("Direct Estimates"="Direct",
@@ -97,6 +105,35 @@ mod_res_visual_prev_map_ui <- function(id) {
 mod_res_visual_prev_map_server <- function(id,CountryInfo,AnalysisInfo){
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+
+    ###############################################################
+    ### display country, survey and indicator info
+    ###############################################################
+
+    output$info_display <- renderUI({
+
+      req(CountryInfo$country())
+      req(CountryInfo$svy_indicator_var())
+      req(CountryInfo$svy_analysis_dat())
+
+      country <- CountryInfo$country()
+      svy_year <- CountryInfo$svyYear_selected()
+
+      HTML(paste0(
+        "<p style='font-size: large;'>",
+        "Selected Country: <span style='font-weight:bold;background-color: #D0E4F7;'>", country, "</span>.",
+        " Survey Year: <span style='font-weight:bold;background-color: #D0E4F7;'>", svy_year, "</span>.",
+        "<br>",
+        "Indicator: <span style='font-weight:bold;background-color: #D0E4F7;'>", CountryInfo$svy_indicator_des(),
+        "</span>.</p>",
+        "<hr style='border-top-color: #E0E0E0;'>"
+      ))
+
+    })
+
+    ###############################################################
+    ### initialize parameters
+    ###############################################################
 
 
     row_names <- c("Direct", "FH", "Unit")
@@ -428,11 +465,20 @@ mod_res_visual_prev_map_server <- function(id,CountryInfo,AnalysisInfo){
       filename = function() {
 
         ### informative file name
-        file.prefix <- paste0(CountryInfo$country(),'_',
+        DHS_country_code <- DHS.country.meta[DHS.country.meta$CountryName == CountryInfo$country(),]$DHS_CountryCode
+
+        file.prefix <- paste0(DHS_country_code,CountryInfo$svyYear_selected(),'_',
+                              CountryInfo$svy_indicator_var(),'_',
                               input$selected_adm,'_',
                               input$selected_method,'_',
                               input$selected_measure)
+
+        # file.prefix <- paste0(CountryInfo$country(),'_',
+        #                       input$selected_adm,'_',
+        #                       input$selected_method,'_',
+        #                       input$selected_measure)
         file.prefix <- gsub("[-.]", "_", file.prefix)
+
         return(paste0(file.prefix,'_prevMap.html'))
 
       },
@@ -450,11 +496,22 @@ mod_res_visual_prev_map_server <- function(id,CountryInfo,AnalysisInfo){
     output$download_static <- downloadHandler(
       filename = function() {
 
+        # file.prefix <- paste0(CountryInfo$country(),'_',
+        #                       input$selected_adm,'_',
+        #                       input$selected_method,'_',
+        #                       input$selected_measure)
+
         ### informative file name
-        file.prefix <- paste0(CountryInfo$country(),'_',
+
+        DHS_country_code <- DHS.country.meta[DHS.country.meta$CountryName == CountryInfo$country(),]$DHS_CountryCode
+
+        file.prefix <- paste0(DHS_country_code,CountryInfo$svyYear_selected(),'_',
+                              CountryInfo$svy_indicator_var(),'_',
                               input$selected_adm,'_',
                               input$selected_method,'_',
                               input$selected_measure)
+
+
         file.prefix <- gsub("[-.]", "_", file.prefix)
 
         return(paste0(file.prefix,'_prevMap.pdf'))

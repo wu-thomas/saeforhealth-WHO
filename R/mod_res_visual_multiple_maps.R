@@ -79,6 +79,14 @@ mod_res_visual_multiple_maps_ui <- function(id){
         h4("Comparing Multiple Maps")
     ),
 
+    ## country, survey and indicator info
+    fluidRow(
+      column(12,
+             div(style = " margin: auto;float: left;margin-top: 5px",
+                 uiOutput(ns("info_display"))
+             )
+      )
+    ),
     fluidRow(
       # Main panel on the left
       column(12,
@@ -251,6 +259,30 @@ mod_res_visual_multiple_maps_server <- function(id,CountryInfo,AnalysisInfo){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    ###############################################################
+    ### display country, survey and indicator info
+    ###############################################################
+
+    output$info_display <- renderUI({
+
+      req(CountryInfo$country())
+      req(CountryInfo$svy_indicator_var())
+      req(CountryInfo$svy_analysis_dat())
+
+      country <- CountryInfo$country()
+      svy_year <- CountryInfo$svyYear_selected()
+
+      HTML(paste0(
+        "<p style='font-size: large;'>",
+        "Selected Country: <span style='font-weight:bold;background-color: #D0E4F7;'>", country, "</span>.",
+        " Survey Year: <span style='font-weight:bold;background-color: #D0E4F7;'>", svy_year, "</span>.",
+        "<br>",
+        "Indicator: <span style='font-weight:bold;background-color: #D0E4F7;'>", CountryInfo$svy_indicator_des(),
+        "</span>.</p>",
+        "<hr style='border-top-color: #E0E0E0;'>"
+      ))
+
+    })
 
     ###############################################################
     ### determine interactive vs static map based on user selection

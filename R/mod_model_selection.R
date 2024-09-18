@@ -263,15 +263,18 @@ mod_model_selection_ui <- function(id){
 }
 
 #' model selection Server Functions
+#' @description A fct function
 #'
 #' @noRd
-mod_model_selection_server <- function(id,CountryInfo,AnalysisInfo){
+
+
+mod_model_selection_server <-  function(id,CountryInfo,AnalysisInfo,parent_session){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
 
 
-    adm.05.strata.country <- c('DOM','COD','TZA')
+    adm.05.strata.country <- c('DOM','COD','TZA','KEN')
     method_names <- c('Direct Estimates','Area-level Model','Unit-level Model')
 
     ###############################################################
@@ -307,8 +310,16 @@ mod_model_selection_server <- function(id,CountryInfo,AnalysisInfo){
         "Selected Country: <span style='font-weight:bold;'>", country, "</span>.",
         " Survey Year: <span style='font-weight:bold;'>", svy_year, "</span>.",
         "<br>",
-        "Indicator: <span style='font-weight:bold;'>", CountryInfo$svy_indicator_des(), "</span> at ",
-        "<span style='font-weight:bold;'>", concatenate_vector_with_and(CountryInfo$GADM_analysis_levels()), "</span> level(s).",
+        "Indicator: <span style='font-weight:bold;'>", CountryInfo$svy_indicator_des(),"</span>.",
+        #" at <span style='font-weight:bold;'>", concatenate_vector_with_and(CountryInfo$GADM_analysis_levels()), "</span> level(s).",
+        "<br><span style='font-weight:bold;background-color:#F2DF8D'>",
+        "Before starting the analysis, please check the app's national estimates for consistency with the DHS final report in the ",
+        actionButton(
+          ns("switch_verification"),
+          "verification panel",
+          style = "border: none; background: none; color: blue; padding: 0; margin-bottom: 3px; font-weight:bold;font-size: large;"
+        ),
+        ".</span><br>",
         "</p>",
         "<div style='background-color: #D0E4F7; padding: 10px; font-size: large;'>",
         "Recommended Modelling Approaches: (Methodology under 'Model Details')",
@@ -323,6 +334,13 @@ mod_model_selection_server <- function(id,CountryInfo,AnalysisInfo){
       ))
 
 
+
+    })
+
+    observeEvent(input$switch_verification, {
+
+      shinydashboard::updateTabItems(parent_session, "Overall_tabs", selected = "DHS_API_est")
+      shinyjs::js$activateTab("tool_kit")
 
     })
 

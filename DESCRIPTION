@@ -51,11 +51,14 @@ Imports:
     survey,
     surveyPrev,
     tidyr,
-    viridisLite
+    viridisLite,
+    naniar, 
+    sjlabelled
 Remotes:
     statnmap/HatchedPolygons,
     rspatial/geodata,
     richardli/SurveyPrev
+    qianyu313/surveyPrevGithub
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1

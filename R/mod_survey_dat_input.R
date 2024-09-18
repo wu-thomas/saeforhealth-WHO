@@ -146,11 +146,11 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
       #indicator_description <- surveyPrev_ind_list[surveyPrev_ind_list$ID==input$Svy_indicator,]$Description
 
       ### which recode (abbreviation) are needed for this indicator
-      recode_for_ind_abbrev(recode_list_abbrev[which(full_ind_des[full_ind_des$ID==CountryInfo$svy_indicator_var(),
+      recode_for_ind_abbrev(recode_list_abbrev[which(ref_tab_all[ref_tab_all$ID==CountryInfo$svy_indicator_var(),
                                                                     recode_list_abbrev]==T)])
 
       ### which recode (full names) are needed for this indicator
-      recode_for_ind_names(recode_list_names[which(full_ind_des[full_ind_des$ID==CountryInfo$svy_indicator_var(),
+      recode_for_ind_names(recode_list_names[which(ref_tab_all[ref_tab_all$ID==CountryInfo$svy_indicator_var(),
                                                                recode_list_abbrev]==T)])
 
 
@@ -371,7 +371,7 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
         return()
       }
       ### check whether all required recode has been uploaded
-      required_recode <- recode_list_abbrev[which(full_ind_des[full_ind_des$ID==CountryInfo$svy_indicator_var(),
+      required_recode <- recode_list_abbrev[which(ref_tab_all[ref_tab_all$ID==CountryInfo$svy_indicator_var(),
                                                                recode_list_abbrev]==T)]
       #message(required_recode)
       recode_status_check <- CountryInfo$check_svy_dat_upload(required_recode,CountryInfo$svy_dat_list())
@@ -636,7 +636,7 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
 
 
       ### check whether all required recode has been uploaded
-      required_recode <- recode_list_abbrev[which(full_ind_des[full_ind_des$ID==CountryInfo$svy_indicator_var(),
+      required_recode <- recode_list_abbrev[which(ref_tab_all[ref_tab_all$ID==CountryInfo$svy_indicator_var(),
                                                                recode_list_abbrev]==T)]
       #message(required_recode)
       recode_status_check <- CountryInfo$check_svy_dat_upload(required_recode,CountryInfo$svy_dat_list())
@@ -670,8 +670,27 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
         session$sendCustomMessage('controlSpinner', list(action = "show",
                                                          message = paste0( 'Preparing analysis dataset, ',
                                                                            "please wait...")))
-        analysis_dat <- surveyPrev::getDHSindicator(Rdata=svy_dat_recode,
-                                                    indicator = CountryInfo$svy_indicator_var())
+        #analysis_dat <- surveyPrev::getDHSindicator(Rdata=svy_dat_recode,
+        #                                            indicator = CountryInfo$svy_indicator_var())
+
+        if(CountryInfo$svy_indicator_var() %in% ref_tab_new$ID){
+          analysis_dat_fun =  getFromNamespace(CountryInfo$svy_indicator_var(), "surveyPrevGithub")
+          library(labelled)
+          library(naniar)
+          library(sjlabelled)
+          library(dplyr)
+
+
+          library(data.table)
+          analysis_dat = surveyPrev::getDHSindicator(Rdata=svy_dat_recode, indicator = NULL, FUN =analysis_dat_fun)
+          detach("package:data.table", unload=TRUE)
+		  
+        }else{
+
+          analysis_dat <- surveyPrev::getDHSindicator(Rdata=svy_dat_recode,
+                                                      indicator = CountryInfo$svy_indicator_var())
+        }
+
 
 
         CountryInfo$svy_analysis_dat(analysis_dat)
@@ -680,7 +699,74 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
         message(e$message)
       })
 
+
+
+      ### produce national estimates
+      gadm.list <- CountryInfo$GADM_list()
+      cluster.geo <- CountryInfo$svy_GPS_dat()
+      analysis.dat <-   CountryInfo$svy_analysis_dat()
+
+      res_adm <- tryCatch({
+        cluster.info <- surveyPrev::clusterInfo(geo=cluster.geo,
+                                                poly.adm1=gadm.list[[paste0('Admin-',1)]],
+                                                poly.adm2=gadm.list[[paste0('Admin-',1)]],
+                                                by.adm1 = paste0("NAME_",1),
+                                                by.adm2 = paste0("NAME_",1))
+
+        # First attempt with alt.strata='v022'
+        surveyPrev::directEST(data = analysis.dat,
+                              cluster.info = cluster.info,
+                              admin = 0,
+                              strata = "all",
+                              alt.strata = 'v022')
+      }, error = function(e) {
+        # If the first attempt fails, try with alt.strata=NULL
+        tryCatch({
+          cluster.info <- surveyPrev::clusterInfo(geo=cluster.geo,
+                                                  poly.adm1=gadm.list[[paste0('Admin-',1)]],
+                                                  poly.adm2=gadm.list[[paste0('Admin-',1)]],
+                                                  by.adm1 = paste0("NAME_",1),
+                                                  by.adm2 = paste0("NAME_",1))
+
+          surveyPrev::directEST(data = analysis.dat,
+                                cluster.info = cluster.info,
+                                admin = 0,
+                                strata = "all",
+                                alt.strata = NULL)
+        }, error = function(e) {
+          # If both attempts fail, set res_adm to NULL
+          NULL
+        })
+      })
+
+      if (!is.null(res_adm)) {
+          AnalysisInfo$Natl_res(res_adm$res.admin0)
+      }
+
+
+
+
       session$sendCustomMessage('controlSpinner', list(action = "hide"))
+
+
+      ### check whether analysis data set is properly produced
+      tryCatch({
+        if(is.null(analysis_dat)){
+            showModal(modalDialog(
+              title = "Failed to Prepare Analysis Dataset",
+              paste0("An error occurred while generating the analysis dataset. ",
+              "This issue may stem from country-specific variable coding that ",
+              "doesn't align with our general coding for the selected indicator. ",
+              "Please try selecting a different survey or indicator for your analysis. ",
+              "We encourage you to report this issue to the developer, ",
+              "as your feedback will help improve the app."),
+              easyClose = TRUE,
+              footer = modalButton("OK")
+            ))
+          }
+      }, error = function(e) {
+        message(e$message)
+      })
 
       ### check whether indicator has too many missing
       tryCatch({
@@ -688,7 +774,7 @@ mod_survey_dat_input_server <- function(id,CountryInfo,AnalysisInfo){
           ind_missing = sum(is.na(analysis_dat$value))/dim(analysis_dat)[1]
           ind_percent_missing = round(ind_missing*100)
 
-          if(ind_percent_missing>95){
+          if(ind_percent_missing>80){
             showModal(modalDialog(
               title = "Too many missing values for this indicator",
               paste0(ind_percent_missing, "% of records have missing data, Data analysis is not recommended."),

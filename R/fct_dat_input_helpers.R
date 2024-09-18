@@ -191,21 +191,26 @@ get_country_GADM <- function(country,resolution=1) {
 
 get_country_shapefile <- function(country,source=NULL,...) {
 
+  if(country=='Sierra Leone'&&(source!='WHO-download')){
+    source ='WHO-preload'
+  }
 
   country_iso3 <- DHS.country.meta[DHS.country.meta$CountryName==country,'ISO3_CountryCode']
 
-  if(is.null(source)){source='GADM'}
+  if(is.null(source)){source='GADM-download'}
 
 
-
+  #################
+  ### WHO preload
+  #################
   if(source =='WHO-preload'){
 
     WHO_shp_path <- system.file("WHO_shp", country_iso3, paste0(country_iso3,"_shp.rds"),
-                                package = "SurveyPrevRshinyWHO")
+                                package = "saeforhealth")
 
     if(WHO_shp_path==''){
       message('No WHO shapefile, use GADM instead.')
-      source <- 'GADM'
+      source <- 'GADM-preload'
 
     }else{
 
@@ -222,12 +227,16 @@ get_country_shapefile <- function(country,source=NULL,...) {
 
   }
 
+  #################
+  ### WHO download
+  #################
   if(source =='WHO-download'){
 
     WHO_shp_prepared <- tryCatch({
       prepare_WHO_country_shp(country.ISO3=country_iso3,...
                                             )
     },error = function(e) {
+      message(e$message)
       return(NULL)
     })
 
@@ -249,37 +258,59 @@ get_country_shapefile <- function(country,source=NULL,...) {
   }
 
 
-  ### load prepared GADM shapefile
-  if(source %in% c('GADM','GADM-download')){
+  #################
+  ### GADM
+  #################
 
-    ### load GADM for analysis
-    if(file.exists(paste0('data/GADM_shp/',country_iso3,'/',country_iso3,'_GADM_analysis.rds')) &
-       (source!='GADM-download')){
+  if(source %in% c('GADM-preload','GADM-download')){
+
+    ### check whether raw (for analysis) and smoothed (for display) shapefile exists
+
+    GADM_analysis_shp_path=''
+    GADM_display_shp_path=''
+
+    if(source =='GADM-preload'){
+
+      GADM_analysis_shp_path <- system.file("GADM_shp", country_iso3, paste0(country_iso3,"_GADM_analysis.rds"),
+                                            package = "saeforhealth")
+      GADM_display_shp_path <- system.file("GADM_shp", country_iso3, paste0(country_iso3,"_GADM_display.rds"),
+                                           package = "saeforhealth")
+    }
+
+    ### check whether preloaded raw shapefile exists
+
+    if(GADM_analysis_shp_path==''){
+      message('No preloaded GADM shapefile for analysis, downloading from source.')
+      country_shp_analysis <- get_country_GADM(country)
+
+    }else{
+
       message('loading prepared GADM shapefile for analysis.')
-      country_shp_analysis <- readRDS(file=paste0('data/GADM_shp/',country_iso3,'/',country_iso3,'_GADM_analysis.rds'))
+      country_shp_analysis <- readRDS(file=GADM_analysis_shp_path)
       country_shp_analysis <- lapply(country_shp_analysis, function(x) {
         sf::st_set_crs(x, 4326)
       })
 
-    } else{
-      message('downloading GADM shapefile for analysis.')
-      country_shp_analysis <- get_country_GADM(country)
     }
 
-    ### load smoothed gadm for display
-    if(file.exists(paste0('data/GADM_shp/',country_iso3,'/',country_iso3,'_GADM_display.rds')) &
-       (source!='GADM-download')){
-      message('loading prepared GADM shapefile for display.')
-      country_shp_smoothed <- readRDS(file=paste0('data/GADM_shp/',country_iso3,'/',country_iso3,'_GADM_display.rds'))
+    ### check whether preloaded smoothed shapefile exists
+    if(GADM_display_shp_path==''){
+      message('No preloaded GADM shapefile for display, downloading from source.')
+      country_shp_smoothed <- get_country_GADM(country,resolution=2)
+
+    }else{
+
+      message('loading prepared GADM shapefile for analysis.')
+      country_shp_smoothed <- readRDS(file=GADM_display_shp_path)
       country_shp_smoothed <- lapply(country_shp_smoothed, function(x) {
         sf::st_set_crs(x, 4326)
       })
 
-    } else{
-      message('downloading GADM shapefile for display.')
-      country_shp_smoothed <- get_country_GADM(country,resolution=2)
     }
+
+
   }
+
 
   return.obj <- list('country_shp_analysis'=country_shp_analysis,
                      'country_shp_smoothed'=country_shp_smoothed)
@@ -422,51 +453,9 @@ measure_response_time <- function() {
 response_time <- measure_response_time()
 }
 
-###############################################################
-###  create example data frame for recode
-###############################################################
-
-if(FALSE){
-
-IR_Individual <- c( "RH_ANCN_W_N4P",  "AN_ANEM_W_ANY",
-                    "FP_NADA_W_UNT", "FP_CUSA_W_MOD", "AN_NUTS_W_THN","HA_HIVP_B_HIV")
-PR_Household_Member <- c("CN_ANMC_C_ANY", "CN_NUTS_C_WH2", "CN_NUTS_C_HA2",
-                         "WS_TLET_H_IMP", "WS_TLET_P_BAS",
-                         "WS_SRCE_P_BAS")
-KR_Children <- c("CH_DIAT_C_ORT", "CH_VACC_C_DP3", "CH_VACC_C_DP1",
-                 "CH_VACC_C_BAS", "CH_VACC_C_NON", "CN_BRFS_C_EXB", "CH_VACC_C_MSL"
-                 )
-BRdata_Birth <- c("RH_DELA_C_SKP", "CM_ECMR_C_NNR")
-HRdata_Household <- c("ML_NETP_H_IT2")
-
-MR_men <- c("HA_HIVP_B_HIV")
-AR_HIV<- c("HA_HIVP_B_HIV")
-CR_couple<- NA
 
 
-# Combine all indicators into a single vector and create a data frame
-all_indicators <- unique(c(IR_Individual, PR_Household_Member, KR_Children, BRdata_Birth, HRdata_Household,MR_men))
-wide_format <- data.frame(ID = all_indicators, stringsAsFactors = FALSE)
 
-# Create columns for each data type and check if the indicator belongs to that type
-wide_format$IR <- wide_format$ID %in% IR_Individual
-wide_format$PR <- wide_format$ID %in% PR_Household_Member
-wide_format$KR <- wide_format$ID %in% KR_Children
-wide_format$BR <- wide_format$ID %in% BRdata_Birth
-wide_format$HR <- wide_format$ID %in% HRdata_Household
-wide_format$MR <- wide_format$ID %in% MR_men
-wide_format$AR <- wide_format$ID %in% AR_HIV
-wide_format$CR <- wide_format$ID %in% CR_couple
 
-# merge back with the information data frame
-surveyPrev_ind_list <-  surveyPrev::surveyPrevIndicators
-#full_ind_des <- merge(surveyPrev_ind_list,wide_format,by='ID',all.x=T)
-full_ind_des[full_ind_des$ID=='FP_CUSA_W_MOD',]$Description <-  "Modern contraceptive prevalence rate (all women currently using any modern method of contraception)"
 
-save(full_ind_des,file='indicator_list.rda')
-
-#recode_list <- c('IR','PR','KR','BR','HR','MR','AR','CR')
-#recode_list[which(wide_format[7,recode_list]==T)]
-#recode_list[which(full_ind_des[full_ind_des$ID=='HA_HIVP_B_HIV',recode_list]==T)]
-}
 
