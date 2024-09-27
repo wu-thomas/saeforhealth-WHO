@@ -74,7 +74,10 @@ mod_DHS_API_est_server <- function(id,CountryInfo,AnalysisInfo,parent_session){
         "</p>",
         "<p>",
         "We are constantly fixing survey specific issues to improve reliability. ",
-        "If you encounter any discrepancies, please <strong>notify us</strong> so we can investigate and refine our indicator coding.",
+        "If you encounter any discrepancies, please ",
+        tags$a("contact us", href = paste0("https://wu-thomas.github.io/surveyPrev_website/team/contact_us/"),
+               target = "_blank", class = "official-link"),
+        " so we can investigate and refine our indicator coding.",
         "</p>",
         "</div>",
         tags$hr(style="border-top-color: #E0E0E0;")

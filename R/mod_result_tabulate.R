@@ -135,7 +135,7 @@ mod_result_tabulate_server <- function(id,CountryInfo,AnalysisInfo){
           "<span style='background-color: #D0E4F7;'><b>", method_des, "</b></span> ",
           "model at ",
           "<span style='background-color: #D0E4F7;'><b>", selected_adm, "</b></span>",
-          " level are not available. Please make the model has been successfully fitted.",
+          " level are not available. Please make sure the model has been successfully fitted.",
           "</p>"
         ))
 

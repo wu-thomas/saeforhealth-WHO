@@ -81,7 +81,11 @@ app_ui <- function(request) {
                                       shinydashboard::menuItem(HTML("&nbsp Tool Kit"), tabName = "tool_kit", icon = icon("screwdriver-wrench"),
                                                                shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp Indicators in the App"), tabName = "indicator_in_app",icon = NULL),
                                                                shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp DHS Indicator Dictionary"), tabName = "indicator_dictionary",icon = NULL),
-                                                               shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp DHS Report Estimate"), tabName = "DHS_API_est",icon = NULL))
+                                                               shinydashboard::menuSubItem(HTML("&nbsp &nbsp &nbsp &nbsp DHS Report Estimate"), tabName = "DHS_API_est",icon = NULL)),
+                                      div(style = "margin-top: 50px; width: 100%; padding: 10px;",
+                                          img(src = "www/WHO_logo.jpg",
+                                              height = "200px", style = "display: block; margin: auto;")
+                                      )
           )
       ),
       shinydashboard::dashboardBody(
@@ -161,7 +165,7 @@ golem_add_external_resources <- function() {
     #favicon(ext = 'png'),
     bundle_resources(
       path = app_sys("/app/www"),
-      app_title = "SurveyPrevRShiny"
+      app_title = "saeforhealth"
     ),
 
     ### add message handler

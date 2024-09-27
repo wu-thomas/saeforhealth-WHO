@@ -18,6 +18,9 @@ RUN R -q -e "BiocManager::install(c('graph', 'Rgraphviz'))"
 RUN R -q -e 'install.packages("INLA",repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)'
 # RUN R -q -e 'remotes::install_github(repo = "https://github.com/hrue/r-inla", ref = "stable", subdir = "rinla", build = FALSE)'
 
+# install correc version of labelled pacakge
+RUN R -q -e 'remotes::install_version("labelled", "2.12.0")'
+
 # install first with dependencies (install again later without dependencies for speedy re-build with docker)
 RUN installGithub.r --deps TRUE \
      wu-thomas/saeforhealth-WHO \
@@ -32,6 +35,7 @@ RUN echo "$CACHEBUST"
 RUN installGithub.r \
      richardli/SUMMER \
      richardli/SurveyPrev \
+     qianyu313/surveyPrevGithub \
      wu-thomas/saeforhealth-WHO \
      && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 

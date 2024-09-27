@@ -56,18 +56,18 @@ background:#666666
 }
 .box0 .box.box-solid.box-primary {
 border: 1px solid #666666}
-        .box1 .box-header > .box-title {background: #9FDA3AFF;}
-        .box1 .box.box-solid.box-primary > .box-header {background: #9FDA3AFF;}
-        .box1 .box.box-solid.box-primary {border: 1px solid #9FDA3AFF;}
-        .box2 .box-header > .box-title {background: #4AC16DFF;}
-        .box2 .box.box-solid.box-primary > .box-header {background: #4AC16DFF;}
-        .box2 .box.box-solid.box-primary {border: 1px solid #4AC16DFF;}
-        .box3 .box-header > .box-title {background: #1FA187FF;}
-        .box3 .box.box-solid.box-primary > .box-header {background: #1FA187FF;}
-        .box3 .box.box-solid.box-primary {border: 1px solid #1FA187FF;}
-        .box4 .box-header > .box-title {background: #277F8EFF;}
-        .box4 .box.box-solid.box-primary > .box-header {background: #277F8EFF;}
-        .box4 .box.box-solid.box-primary {border: 1px solid #277F8EFF;}
+        # .box1 .box-header > .box-title {background: #9FDA3AFF;}
+        # .box1 .box.box-solid.box-primary > .box-header {background: #9FDA3AFF;}
+        # .box1 .box.box-solid.box-primary {border: 1px solid #9FDA3AFF;}
+        # .box2 .box-header > .box-title {background: #4AC16DFF;}
+        # .box2 .box.box-solid.box-primary > .box-header {background: #4AC16DFF;}
+        # .box2 .box.box-solid.box-primary {border: 1px solid #4AC16DFF;}
+        # .box3 .box-header > .box-title {background: #1FA187FF;}
+        # .box3 .box.box-solid.box-primary > .box-header {background: #1FA187FF;}
+        # .box3 .box.box-solid.box-primary {border: 1px solid #1FA187FF;}
+        # .box4 .box-header > .box-title {background: #277F8EFF;}
+        # .box4 .box.box-solid.box-primary > .box-header {background: #277F8EFF;}
+        # .box4 .box.box-solid.box-primary {border: 1px solid #277F8EFF;}
     "))
 
     ),
@@ -79,23 +79,27 @@ border: 1px solid #666666}
         HTML(paste0(
           "<p style='font-size: large; margin-bottom: 20px;'>",
           "Our tool empowers hands-on analysis of health and demographic indicators in low- and middle-income countries (LMICs) at the subnational level.  <br> ",
-          "Visit our ",
-          tags$a("official website", href = paste0(website_link),
-                 target = "_blank", class = "official-link"),
-          " for detailed ",
-          tags$a("instruction videos", href = paste0(website_link,"/overview/youtube/"),
-                 target = "_blank", class = "instruction-link"),
-          ", ",
-          tags$a("methodology descriptions", href = paste0(website_link,"/method/approach_overview/"),
-                 target = "_blank", class = "instruction-link"),
-          " and guidance on ",
-          tags$a("results visualization and interpretation", href = paste0(website_link,"/gallery/visual_overview/"),
-                 target = "_blank", class = "instruction-link"),
-          ".",
-          "<br>",
+          # "Visit our ",
+          # tags$a("official website", href = paste0(website_link),
+          #        target = "_blank", class = "official-link"),
+          # " for detailed ",
+          # tags$a("instruction videos", href = paste0(website_link,"/overview/youtube/"),
+          #        target = "_blank", class = "instruction-link"),
+          # ", ",
+          # tags$a("methodology descriptions", href = paste0(website_link,"/method/approach_overview/"),
+          #        target = "_blank", class = "instruction-link"),
+          # " and guidance on ",
+          # tags$a("results visualization and interpretation", href = paste0(website_link,"/gallery/visual_overview/"),
+          #        target = "_blank", class = "instruction-link"),
+          # ".",
+          # "<br>",
           "Follow the step-by-step instructions below to navigate through the application.",
+          "<br>",
+          "<span style='font-weight: bold; color: #FF0000;'>*</span> ",
+          "<strong>Expandable Instructions Boxes</strong>: ",
+          "Click the button in the top-right corner of each box to expand or collapse its contents.",
           "</p>",
-          "<p style='font-size: small; text-align: right;margin-top:-10px'>", "Version 1.1.0 (", Sys.Date(),")",
+          "<p style='font-size: small; text-align: right;margin-top:-10px'>", "Version 1.1.1 (2024-09-26)",
           "</p>"
         ))
     ),
@@ -129,7 +133,9 @@ border: 1px solid #666666}
                                            tags$li(tags$b("Provide project information"),": Complete the forms with specific details about the project."),
                                            tags$li(tags$b("Request survey access"), ": Post-registration, formally request access to the country/year specific survey datasets. Be sure to request ",
                                                    tags$b("GPS data"), "; approval typically occurs within 48 hours.")
-                                   )
+                                   ),
+                                   "<p>",
+                                   "Additionally, download <strong>WHO shapefiles</strong> from the WHO GIS Hub. Please reference the <strong>implementation guide</strong> for detailed instructions.</p>"
                                  ))
                         )
     )
